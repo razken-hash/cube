@@ -1,0 +1,22 @@
+program islem;
+
+Variables:
+a,b,c : Integer;
+Record student : {{
+Integer age;
+}};
+
+{
+    Output("Islem Medjahdi");
+
+    a = 10;
+
+    while (true) {
+        student.age = 20 ;
+    }
+
+    if(true) {
+        a = 'c'
+    }
+    
+}
