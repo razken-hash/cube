@@ -86,217 +86,217 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 {PROGRAM} {
     yysuccess("PROGRAM",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return PROGRAM;
+    return "PROGRAM";
 }
 
 {VARIABLES} {
     yysuccess("VARIABLES",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return VARIABLES;
+    return "VARIABLES";
 }
 
 {DOT} {
     yysuccess("DOT",yytext,yyleng);
     currentColumnNumber+=yyleng;
-    return DOT;
+    return "DOT";
 }
 
 {COLON} {
     yysuccess("COLON",yytext,yyleng);
     currentColumnNumber+=yyleng;
-    return COLON;
+    return "COLON";
 }
 
 {INTEGER_DECLARE} {
     yysuccess("INTEGER_DECLARE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return INTEGER_DECLARE;
+    return "INTEGER_DECLARE";
 }
 
 {REAL_DECLARE} {
     yysuccess("REAL_DECLARE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return REAL_DECLARE;
+    return "REAL_DECLARE";
 }
 
 {BOOLEAN_DECLARE} {
     yysuccess("BOOLEAN_DECLARE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return BOOLEAN_DECLARE;
+    return "BOOLEAN_DECLARE";
 }
 
 {CHAR_DECLARE} {
     yysuccess("CHAR_DECLARE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return CHAR_DECLARE;
+    return "CHAR_DECLARE";
 }
 
 {STRING_DECLARE} {
     yysuccess("STRING_DECLARE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return STRING_DECLARE;
+    return "STRING_DECLARE";
 }
 
 {STRUCT_DECLARE} {
     yysuccess("STRUCT_DECLARE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return STRUCT_DECLARE;
+    return "STRUCT_DECLARE";
 }
 
 {INTEGER} {
     yysuccess("INTEGER",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return INTEGER;
+    return "INTEGER";
 }
 
 {REAL} {
     yysuccess("REAL",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return REAL;
+    return "REAL";
 }
 
 {BOOLEAN} {
     yysuccess("BOOLEAN",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return BOOLEAN;
+    return "BOOLEAN";
 }
 
 {CHAR} {
     yysuccess("CHAR",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return CHAR;
+    return "CHAR";
 }
 
 {TEXT} {
     yysuccess("TEXT",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return TEXT;
+    return "TEXT";
 }
 
 {ASSIGNMENT} {
     yysuccess("ASSIGNMENT",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return ASSIGNMENT;
+    return "ASSIGNMENT";
 }
 
 {EQUAL} {
     yysuccess("EQUAL",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return EQUAL;
+    return "EQUAL";
 }
 
 {DIFFERENT} {
     yysuccess("DIFFERENT",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return DIFFERENT;
+    return "DIFFERENT";
 }
 
 {AND} {
     yysuccess("AND",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return AND;
+    return "AND";
 }
 
 {OR} {
     yysuccess("OR",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return OR;
+    return "OR";
 }
 
 {NOT} {
     yysuccess("NOT",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return NOT;
+    return "NOT";
 }
 
 {LESS} {
     yysuccess("LESS",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return LESS;
+    return "LESS";
 }
 
 {GREATER} {
     yysuccess("GREATER",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return GREATER;
+    return "GREATER";
 }
 
 {LESSEQUAL} {
     yysuccess("LESSEQUAL",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return LESSEQUAL;
+    return "LESSEQUAL";
 }
 
 {GREATEREQUAL} {
     yysuccess("GREATEREQUAL",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return GREATEREQUAL;
+    return "GREATEREQUAL";
 }
 
 {ADD} {
     yysuccess("ADD",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return ADD;
+    return "ADD";
 }
 
 {SUB} {
     yysuccess("SUB",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return SUB;
+    return "SUB";
 }
 
 {MULT} {
     yysuccess("MULT",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return MULT;
+    return "MULT";
 }
 
 {DIV} {
     yysuccess("DIV",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return DIV;
+    return "DIV";
 }
 
 {MOD} {
     yysuccess("MOD",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return MOD;
+    return "MOD";
 }
 
 {IF} {
     yysuccess("IF",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return IF;
+    return "IF";
 }
 
 {ELSE} {
     yysuccess("ELSE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return ELSE;
+    return "ELSE";
 }
 
 {WHILE} {
     yysuccess("WHILE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return WHILE;
+    return "WHILE";
 }
 
 {LOOP} {
     yysuccess("LOOP",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return LOOP;
+    return "LOOP";
 }
 
 {OUTPUT} {
     yysuccess("OUTPUT",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return OUTPUT;
+    return "OUTPUT";
 }
 
 {INPUT} {
     yysuccess("INPUT",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return INPUT;
+    return "INPUT";
 }
 
 {COMMENT} {
@@ -307,49 +307,49 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 {OPEN_PARENTHESIS} {
     yysuccess("OPEN_PARENTHESIS",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return OPEN_PARENTHESIS;
+    return "OPEN_PARENTHESIS";
 }
 
 {CLOSE_PARENTHESIS} {
     yysuccess("CLOSE_PARENTHESIS",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return CLOSE_PARENTHESIS;
+    return "CLOSE_PARENTHESIS";
 }
 
 {OPEN_CURLY_BRACE} {
     yysuccess("OPEN_CURLY_BRACE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return OPEN_CURLY_BRACE;
+    return "OPEN_CURLY_BRACE";
 }
 
 {CLOSE_CURLY_BRACE} {
     yysuccess("CLOSE_CURLY_BRACE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return CLOSE_CURLY_BRACE;
+    return "CLOSE_CURLY_BRACE";
 }
 
 {OPEN_SQUARE_BRACE} {
     yysuccess("OPEN_SQUARE_BRACE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return OPEN_SQUARE_BRACE;
+    return "OPEN_SQUARE_BRACE";
 }
 
 {CLOSE_SQUARE_BRACE} {
     yysuccess("CLOSE_SQUARE_BRACE",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return CLOSE_SQUARE_BRACE;
+    return "CLOSE_SQUARE_BRACE";
 }
 
 {SEMICOLON} {
     yysuccess("SEMICOLON",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return SEMICOLON;
+    return "SEMICOLON";
 }
 
 {COMMA} {
     yysuccess("COMMA",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return COMMA;
+    return "COMMA";
 }
 
 {SPACE}+|{TAB}+ {
@@ -363,7 +363,7 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 {IDENTIFIER} {
     yysuccess("IDENTIFIER",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return IDENTIFIER;
+    return "IDENTIFIER";
 }
 
 . {
