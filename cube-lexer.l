@@ -11,8 +11,10 @@
 %option yylineno 
 %option noyywrap 
 
+PROGRAM program
 
 ANYTHING .*
+
 SPACE  "\ "
 TAB \t
 DIGIT [0-9]
@@ -21,10 +23,9 @@ NUMBER {DIGIT}+
 DOT \.
 LINEBREAK "\n"|"\r"
 COLON :
-SEMICOLON ;
+SEMICOLON \;
 COMMA \,
 
-PROGRAM program{SPACE}+{ANYTHING}{SEMICOLON}
 VARIABLES Variables{COLON}
 
 OPEN_PARENTHESIS \(
@@ -85,7 +86,7 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 {PROGRAM} {
     yysuccess("PROGRAM",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return "PROGRAM";
+    return (PROGRAM);
 }
 
 {VARIABLES} {
