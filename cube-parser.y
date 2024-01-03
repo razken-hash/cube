@@ -1,8 +1,10 @@
 %{
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <math.h>
+#define YYDEBUG 1
 
-int yylex();
-int yyerror();
 %}
 
 
@@ -20,6 +22,21 @@ int yyerror();
 %left  ADD  SUB  MULT  DIV  MOD 
 %right   NOT
 %left  AND  OR  LESS  GREATER   LESSEQUAL  GREATEREQUAL  EQUAL  DIFFERENT
+
+%start PROGRAM
+%{
+extern FILE *yyin;
+extern int yylineno;
+extern int yyleng;
+extern int yylex();
+
+char* file = "input.cube";
+
+int currentColumnNumber = 1;
+
+void yysuccess(char *s, char *lexeme, int length);
+void yyerror(char *s);
+%}
 
 %%
 
@@ -118,18 +135,29 @@ TABLEVALUE : TABLEVALUE  COMMA EXPRESSION
 
 %%
 main(int argc, char **argv)
-{
-  extern FILE *yyin;
-  
-    yyin = fopen("input.cube", "r");
-  
-  int token;
-  while ((token = yylex()) != 0) {
-      // Process the token
-  }
+{  
+  yyin = fopen("input.cube", "r");
+
+  if(yyin==NULL){
+      printf("File not found\n");
+      return 1;
+    }
 
   yyparse();
   
   fclose(yyin);
   return 0;
+}
+
+void yysuccess(char *s, char *lexeme, int length) {
+    printf("%s : ", s);
+    printf("\033[0;32m");
+    printf("'%s'", lexeme); 
+    printf("\033[0m"); 
+    printf(" at Ln %d Col %d \n", yylineno, currentColumnNumber);
+}
+void yyerror(char *s) {
+    printf("\033[0;31m"); 
+    printf("Lexical error in Line %d Column %d : %s \n", yylineno, currentColumnNumber,s);
+    printf("\033[0m"); 
 }

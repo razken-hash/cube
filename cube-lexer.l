@@ -3,10 +3,9 @@
     #include <stdlib.h>
     #include <string.h>
 
-    int currentColumnNumber = 1;
-
-    void yysuccess(char *, char *, int); 
-    void yyerror(char *);
+    extern void yysuccess(char *s, char *lexeme, int length);
+    extern void yyerror(char *s);
+    extern int currentColumnNumber;
 %}
 
 %option yylineno 
@@ -374,16 +373,3 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 %%
 
 
-void yysuccess(char *s, char *lexeme, int length) {
-    printf("%s : ", s);
-    printf("\033[0;32m");
-    printf("'%s'", lexeme); 
-    printf("\033[0m"); 
-    printf(" at Ln %d Col %d \n", yylineno, currentColumnNumber);
-}
-
-void yyerror(char *s) {
-    printf("\033[0;31m"); 
-    printf("Lexical error in Line %d Column %d : %s: %s \n", yylineno, currentColumnNumber,s, yytext);
-    printf("\033[0m"); 
-}
