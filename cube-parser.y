@@ -18,34 +18,34 @@
 %token  EQUAL  DIFFERENT  AND  OR  NOT  LESS  GREATER  LESSEQUAL  GREATEREQUAL
 %token  ADD  SUB  MULT  DIV  MOD  
 %token  ASSIGNMENT SPACE
-%token PROGRAM ANYTHING
+%token PROGRAM ANYTHING IDENTIFIER
 %left  ADD  SUB  MULT  DIV  MOD 
 %right   NOT
 %left  AND  OR  LESS  GREATER   LESSEQUAL  GREATEREQUAL  EQUAL  DIFFERENT
 
 %start START
 %{
-extern FILE *yyin;
 extern int yylineno;
 extern int yyleng;
+extern int currentColumnNumber;
 extern int yylex();
+extern void yysuccess(char *s, char *lexeme, int length);
+extern void yyerror(char *s);
 
 char* file = "input.cube";
 
-int currentColumnNumber = 1;
 
-void yysuccess(char *s, char *lexeme, int length);
-void yyerror(char *s);
 %}
 
 %%
 
-START : ANYTHING
-;
+START : ELSE;
 
 %%
 main(int argc, char **argv)
 {  
+  extern FILE *yyin;
+
   yyin = fopen("input.cube", "r");
 
   if(yyin==NULL){
@@ -56,18 +56,8 @@ main(int argc, char **argv)
   yyparse();
   
   fclose(yyin);
+  
   return 0;
 }
 
-void yysuccess(char *s, char *lexeme, int length) {
-    printf("%s : ", s);
-    printf("\033[0;32m");
-    printf("'%s'", lexeme); 
-    printf("\033[0m"); 
-    printf(" at Ln %d Col %d \n", yylineno, currentColumnNumber);
-}
-void yyerror(char *s) {
-    printf("\033[0;31m"); 
-    printf("error in Line %d Column %d : %s \n", yylineno, currentColumnNumber,s);
-    printf("\033[0m"); 
-}
+

@@ -1,8 +1,7 @@
 #!/bin/bash
 
 lex cube-lexer.l
-
-bison -dy cube-parser.y
+yacc -d cube-parser.y
 
 gcc lex.yy.c y.tab.c
 

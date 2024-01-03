@@ -3,9 +3,9 @@
     #include <stdlib.h>
     #include <string.h>
 
-    extern void yysuccess(char *s, char *lexeme, int length);
-    extern void yyerror(char *s);
-    extern int currentColumnNumber;
+    void yysuccess(char *s, char *lexeme, int length);
+    void yyerror(char *s);
+    int currentColumnNumber = 1;
 %}
 
 %option yylineno 
@@ -86,7 +86,7 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 {PROGRAM} {
     yysuccess("PROGRAM",yytext, yyleng);
     currentColumnNumber+=yyleng;
-    return (PROGRAM);
+    return "PROGRAM";
 }
 
 {VARIABLES} {
@@ -373,4 +373,33 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
+/* int main() {
+  extern FILE *yyin;
 
+  yyin = fopen("input.cube", "r");
+
+  if(yyin==NULL){
+      printf("File not found\n");
+      return 1;
+    }
+
+  yylex();
+  
+  fclose(yyin);
+  
+  return 0;
+} */
+
+void yysuccess(char *s, char *lexeme, int length) {
+    printf("%s : ", s);
+    printf("\033[0;32m");
+    printf("'%s'", lexeme); 
+    printf("\033[0m"); 
+    printf(" at Ln %d Col %d \n", yylineno, currentColumnNumber);
+}
+
+void yyerror(char *s) {
+    printf("\033[0;31m"); 
+    printf("error in Line %d Column %d : %s \n", yylineno, currentColumnNumber,s);
+    printf("\033[0m"); 
+}
