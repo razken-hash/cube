@@ -367,27 +367,12 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 }
 
 . {
-    printf("Unrecognized character %s in line %d column %d\n", yytext, yylineno, currentColumnNumber);
+    yyerror("Unrecognized character");
     exit(1);
 }
 
 %%
 
-int main(int argc, char **argv) {
-
-    extern FILE *yyin;
-  
-    yyin = fopen("input.cube", "r");
-  
-    int token;
-    while ((token = yylex()) != 0) {
-        // Process the token
-    }
-
-    fclose(yyin);
-    return 0;
-
-}
 
 void yysuccess(char *s, char *lexeme, int length) {
     printf("%s : ", s);
@@ -399,6 +384,6 @@ void yysuccess(char *s, char *lexeme, int length) {
 
 void yyerror(char *s) {
     printf("\033[0;31m"); 
-    printf("Lexical error in Line %d Column %d : Unrecognized character: %s \n", yylineno, currentColumnNumber, yytext);
+    printf("Lexical error in Line %d Column %d : %s: %s \n", yylineno, currentColumnNumber,s, yytext);
     printf("\033[0m"); 
 }

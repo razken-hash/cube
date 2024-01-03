@@ -119,10 +119,17 @@ TABLEVALUE : TABLEVALUE  COMMA EXPRESSION
 %%
 main(int argc, char **argv)
 {
-  yyparse();
-}
+  extern FILE *yyin;
+  
+    yyin = fopen("input.cube", "r");
+  
+  int token;
+  while ((token = yylex()) != 0) {
+      // Process the token
+  }
 
-yyerror(char *s)
-{
-  fprintf(stderr, "Error: %s\n", s);
+  yyparse();
+  
+  fclose(yyin);
+  return 0;
 }
