@@ -8,12 +8,20 @@
 #define YYDEBUG 1
 %}
 
-%token PROGRAM VARIABLES INTEGER_DECLARE REAL_DECLARE BOOLEAN_DECLARE CHAR_DECLARE STRING_DECLARE STRUCT_DECLARE
+%token PROGRAM VARIABLES INTEGER_DECLARE REAL_DECLARE BOOLEAN_DECLARE CHAR_DECLARE STRING_DECLARE 
 %token INTEGER REAL BOOLEAN CHAR TEXT
 %token IDENTIFIER
-%token OPEN_CURLY_BRACE CLOSE_CURLY_BRACE OPEN_SQUARE_BRACE CLOSE_SQUARE_BRACE OPEN_PARENTHESIS CLOSE_PARENTHESIS
-%token SEMICOLON COLON COMMA DOT ASSIGNMENT EQUAL DIFFERENT AND OR NOT LESS GREATER LESSEQUAL GREATEREQUAL ADD SUB MULT DIV MOD
+%token OPEN_CURLY_BRACE CLOSE_CURLY_BRACE   OPEN_PARENTHESIS CLOSE_PARENTHESIS
+%token SEMICOLON COLON COMMA  ASSIGNMENT EQUAL DIFFERENT AND OR NOT LESS GREATER    LESSEQUAL GREATEREQUAL ADD SUB MULT DIV MOD
 %token IF ELSE WHILE LOOP OUTPUT INPUT
+
+%left OR
+%left AND
+%nonassoc NOT
+%nonassoc EQUAL DIFFERENT LESS GREATER LESSEQUAL GREATEREQUAL
+%left ADD SUB
+%left MULT DIV MOD
+%left OPEN_PARENTHESIS
 
 %start Program
 
@@ -25,7 +33,7 @@ extern int yylex();
 
 char* file = "input.cube";
 
-int currentColumn = 1;
+int currentColumnNumber = 1;
 
 void yysuccess(char *s);
 void yyerror(const char *s);
@@ -34,28 +42,24 @@ void showLexicalError();
 
 %%
 
-Program: PROGRAM IDENTIFIER SEMICOLON Variables DeclarationBlock
-
-Variables: VARIABLES COLON Declaration SEMICOLON
-
-Declaration:  IdentifierList COLON INTEGER_DECLARE
-        | IdentifierList COLON REAL_DECLARE
-        | IdentifierList COLON BOOLEAN_DECLARE
-        | IdentifierList COLON CHAR_DECLARE
-        | IdentifierList COLON STRING_DECLARE
+Program: PROGRAM IDENTIFIER SEMICOLON VARIABLES COLON Declaration ProgramBody
+Declaration:  IdentifierList COLON INTEGER_DECLARE SEMICOLON Declaration
+        | IdentifierList COLON REAL_DECLARE SEMICOLON Declaration
+        | IdentifierList COLON BOOLEAN_DECLARE SEMICOLON Declaration
+        | IdentifierList COLON CHAR_DECLARE SEMICOLON Declaration
+        | IdentifierList COLON STRING_DECLARE SEMICOLON Declaration  | %empty
 
 IdentifierList: IDENTIFIER | IdentifierList COMMA IDENTIFIER
 
-DeclarationBlock: OPEN_CURLY_BRACE StatementList CLOSE_CURLY_BRACE
-
-StatementList:  StatementList Statement | %empty
-
-Statement: IF Expression OPEN_CURLY_BRACE StatementList CLOSE_CURLY_BRACE ELSE OPEN_CURLY_BRACE StatementList CLOSE_CURLY_BRACE
-          | IF Expression OPEN_CURLY_BRACE StatementList CLOSE_CURLY_BRACE
-         | WHILE Expression OPEN_CURLY_BRACE StatementList CLOSE_CURLY_BRACE
-         | OUTPUT Expression SEMICOLON
-         | INPUT IDENTIFIER SEMICOLON
-         | IDENTIFIER ASSIGNMENT Expression SEMICOLON
+ProgramBody: OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
+Body:  Statement Body  | %empty
+Statement: IF OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE 
+         | IF OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE ELSE OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
+         | WHILE OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
+         | OUTPUT OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS SEMICOLON
+         | INPUT OPEN_PARENTHESIS IDENTIFIER CLOSE_PARENTHESIS SEMICOLON 
+         | IDENTIFIER ASSIGNMENT Expression SEMICOLON 
+         | LOOP OPEN_PARENTHESIS Expression COMMA Expression COMMA Expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
 
 Expression: OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS
           | IDENTIFIER
@@ -64,7 +68,7 @@ Expression: OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS
           | BOOLEAN
           | CHAR
           | TEXT
-          | Expression ADD Expression
+          | Expression ADD Expression 
           | Expression SUB Expression
           | Expression MULT Expression
           | Expression DIV Expression
@@ -74,20 +78,18 @@ Expression: OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS
           | Expression AND Expression
           | Expression OR Expression
           | NOT Expression
-          | LESS Expression
-          | GREATER Expression
-          | LESSEQUAL Expression
-          | GREATEREQUAL Expression
-          | LESSEQUAL Expression
+          | Expression LESS Expression
+          | Expression GREATER Expression
+          | Expression LESSEQUAL Expression
+          | Expression GREATEREQUAL Expression
 %%
 
 void yysuccess(char *s){
-    // fprintf(stdout, "%d: %s\n", yylineno, s);
-    currentColumn+=yyleng;
+    currentColumnNumber+=yyleng;
 }
 
 void yyerror(const char *s) {
-  fprintf(stdout, "File '%s', line %d, character %d :  %s \n", file, yylineno, currentColumn, s);
+  fprintf(stdout, "File '%s', line %d, character %d :  %s \n", file, yylineno, currentColumnNumber, s);
 }
 
 int main (void)
@@ -121,7 +123,7 @@ void showLexicalError() {
     sprintf(introError, "Lexical error in Line %d : Unrecognized character : ", yylineno);
     printf("%s%s", introError, line);  
     int j=1;
-    while(j<currentColumn+strlen(introError)) { printf(" "); j++; }
+    while(j<currentColumnNumber+strlen(introError)) { printf(" "); j++; }
     printf("^\n");
 
 

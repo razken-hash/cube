@@ -2,21 +2,14 @@ program islem;
 
 Variables:
 a,b,c : Integer;
-Record student : {{
-Integer age;
-}};
-
+student: Real;
 {
     Output("Islem Medjahdi");
-
     a = 10;
-
-    while (true) {
-        student.age = 20 ;
+    while (false) {
+        a = 20 ;
     }
-
     if(true) {
-        a = 'c'
+        a = 'c';
     }
-    
 }
