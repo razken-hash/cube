@@ -1,12 +1,12 @@
 %{
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <string.h>
+#include <stdio.h>
+#include "syntaxique.tab.h"
 
-    int currentColumnNumber = 1;
+extern void yysuccess(char *s);
+extern void yyerror(const char *s);
+extern void showLexicalError();
+extern int currentColumn;
 
-    void yysuccess(char *, char *, int); 
-    void yyerror(char *);
 %}
 
 %option yylineno 
@@ -373,32 +373,3 @@ IDENTIFIER [a-zA-Z_][a-zA-Z0-9_]*
 
 %%
 
-int main(int argc, char **argv) {
-
-    extern FILE *yyin;
-  
-    yyin = fopen("input.cube", "r");
-  
-    int token;
-    while ((token = yylex()) != 0) {
-        // Process the token
-    }
-
-    fclose(yyin);
-    return 0;
-
-}
-
-void yysuccess(char *s, char *lexeme, int length) {
-    printf("%s : ", s);
-    printf("\033[0;32m");
-    printf("'%s'", lexeme); 
-    printf("\033[0m"); 
-    printf(" at Ln %d Col %d \n", yylineno, currentColumnNumber);
-}
-
-void yyerror(char *s) {
-    printf("\033[0;31m"); 
-    printf("Lexical error in Line %d Column %d : Unrecognized character: %s \n", yylineno, currentColumnNumber, yytext);
-    printf("\033[0m"); 
-}
