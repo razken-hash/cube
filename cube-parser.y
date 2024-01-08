@@ -5,15 +5,59 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#include "structs/symboles_table.c"
+
 #define YYDEBUG 1
 %}
 
-%token PROGRAM VARIABLES INTEGER_DECLARE REAL_DECLARE BOOLEAN_DECLARE CHAR_DECLARE STRING_DECLARE 
-%token INTEGER REAL BOOLEAN CHAR TEXT
-%token IDENTIFIER
-%token OPEN_CURLY_BRACE CLOSE_CURLY_BRACE   OPEN_PARENTHESIS CLOSE_PARENTHESIS
-%token SEMICOLON COLON COMMA  ASSIGNMENT EQUAL DIFFERENT AND OR NOT LESS GREATER    LESSEQUAL GREATEREQUAL ADD SUB MULT DIV MOD
-%token IF ELSE WHILE LOOP OUTPUT INPUT
+%union {
+    char string[255];
+    int int_val;
+    double real_val;
+    char char_val;
+}
+
+%token PROGRAM
+%token VARIABLES 
+%token <string> INTEGER_DECLARE 
+%token <string> REAL_DECLARE 
+%token <string> BOOLEAN_DECLARE 
+%token <string> CHAR_DECLARE 
+%token <string> STRING_DECLARE 
+%token <int_val> INTEGER 
+%token <real_val> REAL 
+%token BOOLEAN 
+%token <char_val> CHAR 
+%token <string> TEXT
+%token <string> IDENTIFIER
+%token OPEN_CURLY_BRACE 
+%token CLOSE_CURLY_BRACE   
+%token OPEN_PARENTHESIS 
+%token CLOSE_PARENTHESIS
+%token SEMICOLON 
+%token COLON 
+%token COMMA  
+%token ASSIGNMENT 
+%token EQUAL 
+%token DIFFERENT 
+%token AND 
+%token OR 
+%token NOT 
+%token LESS 
+%token GREATER    
+%token LESSEQUAL 
+%token GREATEREQUAL 
+%token ADD 
+%token SUB 
+%token MULT 
+%token DIV 
+%token MOD
+%token IF 
+%token ELSE 
+%token WHILE 
+%token LOOP 
+%token OUTPUT 
+%token INPUT
 
 %left OR
 %left AND
@@ -34,6 +78,8 @@ extern int yylex();
 char* file = "input.cube";
 
 int currentColumnNumber = 1;
+Row *Table_sym;  
+
 
 void yysuccess(char *s);
 void yyerror(const char *s);
@@ -94,15 +140,12 @@ void yyerror(const char *s) {
 
 int main (void)
 {
-    // yydebug = 1;
     yyin=fopen(file, "r");
     if(yyin==NULL){
         printf("erreur dans l'ouverture du fichier");
         return 1;
     }
     yyparse();  
-
-// printf("succ\n");
 
     return 0;
 }
