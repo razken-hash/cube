@@ -7,4 +7,8 @@ flex cube-lexer.l
 
 gcc cube-parser.tab.c lex.yy.c  -lfl -lm
 
-./a.out
+if [ $# -gt 0 ]; then
+    ./a.out "$@"
+else
+    ./a.out
+fi

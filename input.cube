@@ -13,5 +13,4 @@ b : Bool;
     r = i // (i+1);
 
     b = not b;
-
 }

@@ -6,14 +6,11 @@ typedef struct Column
 {
     char typeToken[256];
     char nameToken[256];
-    char valeurToken[256];
-    int numColumn;
     struct Column *nextC;
 } Column;
 
 typedef struct Row
 {
-    int numRow;
     Column *Columns;
     struct Row *nextL;
 } Row;
@@ -22,7 +19,6 @@ Column *allocateColumn()
 {
     Column *col = (Column *)malloc(sizeof(Column));
 
-    col->numColumn = 1;
     col->nextC = NULL;
 
     return col;
@@ -33,13 +29,12 @@ Row *allocateRow()
     Row *li = (Row *)malloc(sizeof(Row));
 
     li->Columns = NULL;
-    li->numRow = 1;
     li->nextL = NULL;
 
     return li;
 }
 
-Row *insertRow(Row **row, int numRow)
+Row *insertRow(Row **row)
 {
     Row *li;
     Row *newRow;
@@ -57,12 +52,11 @@ Row *insertRow(Row **row, int numRow)
         }
         newRow = allocateRow();
         li->nextL = newRow;
-        newRow->numRow = numRow;
         return newRow;
     }
 }
 
-void insertColumn(Row *row, char *typeToken, char *nameToken, char *valeurToken, int numColumn)
+void insertColumn(Row *row, char *typeToken, char *nameToken)
 {
     Column *col, *c = row->Columns;
     if (c == NULL)
@@ -70,8 +64,6 @@ void insertColumn(Row *row, char *typeToken, char *nameToken, char *valeurToken,
         col = allocateColumn();
         strcpy(col->typeToken, typeToken);
         strcpy(col->nameToken, nameToken);
-        strcpy(col->valeurToken, valeurToken);
-        col->numColumn = numColumn;
         row->Columns = col;
     }
     else
@@ -83,8 +75,6 @@ void insertColumn(Row *row, char *typeToken, char *nameToken, char *valeurToken,
         col = allocateColumn();
         strcpy(col->typeToken, typeToken);
         strcpy(col->nameToken, nameToken);
-        strcpy(col->valeurToken, valeurToken);
-        col->numColumn = numColumn;
         c->nextC = col;
     }
 }
@@ -114,8 +104,6 @@ void printSymboleTable(Row *row)
     {
         printf("typeToken : %s\n", col->typeToken);
         printf("nameToken : %s\n", col->nameToken);
-        printf("valeurToken : %s\n", col->valeurToken);
-        printf("numColumn : %d\n", col->numColumn);
         col = col->nextC;
     }
 }
@@ -127,9 +115,7 @@ void saveSymboleTable(Row *row, char *fileName)
     while (col != NULL)
     {
         fprintf(f, "typeToken : %s - ", col->typeToken);
-        fprintf(f, "nameToken : %s - ", col->nameToken);
-        fprintf(f, "valeurToken : %s - ", col->valeurToken);
-        fprintf(f, "numColumn : %d\n", col->numColumn);
+        fprintf(f, "nameToken : %s - \n", col->nameToken);
         col = col->nextC;
     }
     fclose(f);

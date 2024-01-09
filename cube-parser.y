@@ -105,7 +105,7 @@ declaration: IDENTIFIER COLON type SEMICOLON {
         printf("File '%s', line %d: %s Variable already declared \n", file, yylineno,$1);
         YYERROR;
     }else{
-        insertColumn(Table_sym,$<string>3,$1,"",1); 
+        insertColumn(Table_sym,$<string>3,$1); 
     }
 }
 type: INTEGER_DECLARE | REAL_DECLARE | BOOLEAN_DECLARE | CHAR_DECLARE | STRING_DECLARE
@@ -403,21 +403,26 @@ void yyerror(const char *s) {
   fprintf(stdout, "File '%s', line %d, character %d :  %s \n", file, yylineno, currentColumnNumber, s);
 }
 
-int main (void)
+int main (int argc,char **argv)
 {
     
-    yyin=fopen(file, "r");
+    yyin=fopen(argv[1], "r");
     if(yyin==NULL){
-        printf("erreur dans l'ouverture du fichier");
+        printf("File '%s' not found\n", argv[1]);
         return 1;
     }
-    Table_sym = insertRow(&Table_sym ,1);
+
+    Table_sym = insertRow(&Table_sym );
 
     yyparse();  
 
     save_quadruplets(Quad, "quadruplets.txt");
 
     saveSymboleTable(Table_sym, "symboles_table.txt");
+    
+    printf("File '%s' compiled successfully\n" , file);
+    printf( "Quadruplets saved in 'quadruplets.txt'\n" );
+    printf( "Symbols table saved in 'symbols_table.txt'\n" );
 
     return 0;
 }
@@ -440,6 +445,4 @@ void showLexicalError() {
     int j=1;
     while(j<currentColumnNumber+strlen(introError)) { printf(" "); j++; }
     printf("^\n");
-
-
 }
