@@ -106,3 +106,31 @@ Column *get_id(Row *Row, char id[])
     }
     return col;
 }
+
+void printSymboleTable(Row *row)
+{
+    Column *col = row->Columns;
+    while (col != NULL)
+    {
+        printf("typeToken : %s\n", col->typeToken);
+        printf("nameToken : %s\n", col->nameToken);
+        printf("valeurToken : %s\n", col->valeurToken);
+        printf("numColumn : %d\n", col->numColumn);
+        col = col->nextC;
+    }
+}
+
+void saveSymboleTable(Row *row, char *fileName)
+{
+    FILE *f = fopen(fileName, "w");
+    Column *col = row->Columns;
+    while (col != NULL)
+    {
+        fprintf(f, "typeToken : %s - ", col->typeToken);
+        fprintf(f, "nameToken : %s - ", col->nameToken);
+        fprintf(f, "valeurToken : %s - ", col->valeurToken);
+        fprintf(f, "numColumn : %d\n", col->numColumn);
+        col = col->nextC;
+    }
+    fclose(f);
+}

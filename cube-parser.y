@@ -392,6 +392,7 @@ expression: expression ADD expression {
         }
     }
 
+
 %%
 
 void yysuccess(char *s){
@@ -415,6 +416,8 @@ int main (void)
     yyparse();  
 
     save_quadruplets(Quad, "quadruplets.txt");
+
+    saveSymboleTable(Table_sym, "symboles_table.txt");
 
     return 0;
 }

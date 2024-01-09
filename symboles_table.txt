@@ -1,0 +1,3 @@
+typeToken : Integer - nameToken : i - valeurToken :  - numColumn : 1
+typeToken : Real - nameToken : r - valeurToken :  - numColumn : 1
+typeToken : Bool - nameToken : b - valeurToken :  - numColumn : 1
