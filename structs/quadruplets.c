@@ -8,6 +8,7 @@ typedef struct Quadruplet
     char arg1[256];
     char arg2[256];
     char result[256];
+    int num;
     struct Quadruplet *next;
 } Quadruplet;
 
@@ -18,11 +19,12 @@ Quadruplet *create_quadruplet(char *op, char *arg1, char *arg2, char *result)
     strcpy(q->arg1, arg1);
     strcpy(q->arg2, arg2);
     strcpy(q->result, result);
+    q->num = 1;
     q->next = NULL;
     return q;
 }
 
-void insert_quadruplet(Quadruplet **q, char *op, char *arg1, char *arg2, char *result)
+Quadruplet *insert_quadruplet(Quadruplet **q, char *op, char *arg1, char *arg2, char *result)
 {
     Quadruplet *new = create_quadruplet(op, arg1, arg2, result);
     if (*q == NULL)
@@ -37,7 +39,24 @@ void insert_quadruplet(Quadruplet **q, char *op, char *arg1, char *arg2, char *r
             aux = aux->next;
         }
         aux->next = new;
+        new->num = aux->num + 1;
     }
+    return new;
+}
+
+void update_quadruplet_result(Quadruplet *q, char *result)
+{
+    strcpy(q->result, result);
+}
+
+Quadruplet *getLastQuad(Quadruplet *q)
+{
+    Quadruplet *aux = q;
+    while (aux->next != NULL)
+    {
+        aux = aux->next;
+    }
+    return aux;
 }
 
 void print_quadruplets(Quadruplet *q)
@@ -65,7 +84,7 @@ void save_quadruplets(Quadruplet *q, char *filename)
     FILE *f = fopen(filename, "w");
     while (q != NULL)
     {
-        fprintf(f, "%s %s %s %s\n", q->op, q->arg1, q->arg2, q->result);
+        fprintf(f, "%d %s %s %s %s\n", q->num, q->op, q->arg1, q->arg2, q->result);
         q = q->next;
     }
     fclose(f);

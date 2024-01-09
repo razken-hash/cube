@@ -6,7 +6,7 @@
 #include <string.h>
 #include <math.h>
 #include "structs/symboles_table.c"
-#include "structs/quadruplets.c"
+#include "structs/stack.c"
 
 %}
 
@@ -87,6 +87,7 @@ char* file = "input.cube";
 int currentColumnNumber = 1;
 Row *Table_sym;  
 Quadruplet *Quad;
+Stack *stack;
 char currentRegister[255];
 int currentRegisterIndex = 1;
 
@@ -110,7 +111,7 @@ declaration: IDENTIFIER COLON type SEMICOLON {
 }
 type: INTEGER_DECLARE | REAL_DECLARE | BOOLEAN_DECLARE | CHAR_DECLARE | STRING_DECLARE
 Body: | statement Body
-statement: assignment | input | output
+statement: assignment | input | output | condition
 assignment: IDENTIFIER ASSIGNMENT expression SEMICOLON {
     Column *col = get_id(Table_sym,$1);
     if(col==NULL){
@@ -403,6 +404,39 @@ input: INPUT OPEN_PARENTHESIS IDENTIFIER CLOSE_PARENTHESIS SEMICOLON {
 }
 output: OUTPUT OPEN_PARENTHESIS expression CLOSE_PARENTHESIS SEMICOLON {
     insert_quadruplet(&Quad, "output", $3.value, "", "");
+}
+
+condition:  BeginCondition OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE ElseCondition
+BeginCondition: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS {
+    if(strcmp($3.type,"Bool")==0){
+        Quadruplet *newQuad = insert_quadruplet(&Quad, "BZ", $3.value, "", "");
+        push(&stack, newQuad);
+    }else{
+        printf("File '%s', line %d: Type mismatch \n", file, yylineno);
+        YYERROR;
+    }
+}
+ElseCondition: {
+    Quadruplet *poppedQuad = pop(&stack);
+    Quadruplet *lastQuad = getLastQuad(Quad);
+    char *num = (char*)malloc(sizeof(char)*10);
+    sprintf(num, "%d", lastQuad->num + 1);
+    update_quadruplet_result(poppedQuad, num);
+} | BeginElse Body  CLOSE_CURLY_BRACE {
+    Quadruplet *poppedQuad = pop(&stack);
+    Quadruplet *lastQuad = getLastQuad(Quad);
+    char *num = (char*)malloc(sizeof(char)*10);
+    sprintf(num, "%d", lastQuad->num + 1);
+    update_quadruplet_result(poppedQuad, num);
+}
+
+BeginElse: ELSE OPEN_CURLY_BRACE {
+    Quadruplet *poppedQuad = pop(&stack);
+    Quadruplet *newQuad = insert_quadruplet(&Quad, "BR", "", "", "");
+    char *num = (char*)malloc(sizeof(char)*10);
+    sprintf(num, "%d", newQuad->num + 1);
+    update_quadruplet_result(poppedQuad, num);
+    push(&stack, newQuad);
 }
 %%
 

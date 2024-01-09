@@ -13,4 +13,17 @@ b : Bool;
     r = i // (i+1);
 
     b = not b;
+
+    if(b) {
+        if(b){
+            Output("Hello world");    
+        }
+        Output("123 viva lalgerie");
+    }
+    if(b) {
+        Output("Rani f live");
+    }else{
+
+    }
+
 }

@@ -115,7 +115,7 @@ void saveSymboleTable(Row *row, char *fileName)
     while (col != NULL)
     {
         fprintf(f, "typeToken : %s - ", col->typeToken);
-        fprintf(f, "nameToken : %s - \n", col->nameToken);
+        fprintf(f, "nameToken : %s \n", col->nameToken);
         col = col->nextC;
     }
     fclose(f);
