@@ -1,15 +1,16 @@
 program islem;
-
 Variables:
-a,b,c : Integer;
-student: Real;
+a : Integer;
+dddddd : Integer;
+c: Text;
+d: Integer;
+e: Integer;
 {
-    Output("Islem Medjahdi");
-    a = 10;
-    while (false) {
-        a = 20 ;
-    }
-    if(true) {
-        a = 'c';
-    }
+    dddddd = "Hello world";
+    a = 50;
+    c = 30;
+    c = a + d + e;
+
+    # islem Medjahdi
+
 }

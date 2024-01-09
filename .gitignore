@@ -2,3 +2,5 @@ lex.yy.c
 a.out
 cube-parser.tab.c
 cube-parser.tab.h
+sidou
+quadruplets.txt

@@ -6,8 +6,8 @@
 #include <string.h>
 #include <math.h>
 #include "structs/symboles_table.c"
+#include "structs/quadruplets.c"
 
-#define YYDEBUG 1
 %}
 
 %union {
@@ -15,7 +15,9 @@
     int int_val;
     double real_val;
     char char_val;
+    int bool_val;
 }
+
 
 %token PROGRAM
 %token VARIABLES 
@@ -26,7 +28,7 @@
 %token <string> STRING_DECLARE 
 %token <int_val> INTEGER 
 %token <real_val> REAL 
-%token BOOLEAN 
+%token <bool_val> BOOLEAN 
 %token <char_val> CHAR 
 %token <string> TEXT
 %token <string> IDENTIFIER
@@ -79,6 +81,9 @@ char* file = "input.cube";
 
 int currentColumnNumber = 1;
 Row *Table_sym;  
+Quadruplet *Quad;
+char currentRegister[255];
+int currentRegisterIndex = 1;
 
 
 void yysuccess(char *s);
@@ -88,46 +93,132 @@ void showLexicalError();
 
 %%
 
-Program: PROGRAM IDENTIFIER SEMICOLON VARIABLES COLON Declaration ProgramBody
-Declaration:  IdentifierList COLON INTEGER_DECLARE SEMICOLON Declaration
-        | IdentifierList COLON REAL_DECLARE SEMICOLON Declaration
-        | IdentifierList COLON BOOLEAN_DECLARE SEMICOLON Declaration
-        | IdentifierList COLON CHAR_DECLARE SEMICOLON Declaration
-        | IdentifierList COLON STRING_DECLARE SEMICOLON Declaration  | %empty
+Program: | PROGRAM IDENTIFIER SEMICOLON VARIABLES COLON declarations OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
+declarations: | declaration declarations
+declaration: IDENTIFIER COLON type SEMICOLON {
+    if(get_id(Table_sym,$1)!=NULL){
+        printf("File '%s', line %d: %s Variable already declared \n", file, yylineno,$1);
+        YYERROR;
+    }else{
+        insertColumn(Table_sym,$<string>3,$1,"",1); 
+    }
+}
+type: INTEGER_DECLARE | REAL_DECLARE | BOOLEAN_DECLARE | CHAR_DECLARE | STRING_DECLARE
+Body: | statement Body
+statement: assignment
+assignment: IDENTIFIER ASSIGNMENT expression SEMICOLON {
+    if(get_id(Table_sym,$1)==NULL){
+        printf("File '%s', line %d: %s Variable not declared \n", file, yylineno,$1);
+        YYERROR;
+    }else{
+        insert_quadruplet(&Quad, ":=", $<string>3, "", $1);
+    }
+}
+expression: expression ADD expression {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "+", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression SUB expression 
+    {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "-", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression MULT expression 
+    {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "*", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression DIV expression  {
+        if(strcmp($<string>3,"0")==0){
+            printf("File '%s', line %d: Division by zero \n", file, yylineno);
+            YYERROR;
+        }else{
+            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            insert_quadruplet(&Quad, "/", $<string>1, $<string>3, currentRegister);
+            strcpy(currentRegister,$<string>$);
+        }
+    }
+    | expression MOD expression  {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "%", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression EQUAL expression  {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "==", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression DIFFERENT expression 
+    {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "!=", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression LESS expression  {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "<", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression GREATER expression  {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, ">", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression LESSEQUAL expression  {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "<=", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression GREATEREQUAL expression  {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, ">=", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression AND expression {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "&&", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | expression OR expression {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "||", $<string>1, $<string>3, currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | NOT expression {
+        sprintf(currentRegister, "R%d", currentRegisterIndex++);
+        insert_quadruplet(&Quad, "!", $<string>2, "", currentRegister);
+        strcpy(currentRegister,$<string>$);
+    }
+    | OPEN_PARENTHESIS expression CLOSE_PARENTHESIS {
+        strcpy($<string>2,$<string>$);
+    }
+    | INTEGER {
+        sprintf($<string>$, "%d", $1);
+    }
+    | REAL  {
+        sprintf($<string>$, "%f", $1);
+    }
+    | BOOLEAN  {
+        sprintf($<string>$, "%d", $1);
+    }
+    | CHAR {
+        sprintf($<string>$, "%c", $1);
+    }
+    | TEXT {
+        sprintf($<string>$, "%s", $1);
+    }
+    | IDENTIFIER {
+        if(get_id(Table_sym,$1)==NULL){
+            printf("File '%s', line %d: %s Variable not declared \n", file, yylineno,$1);
+            YYERROR;
+        }else{
+            sprintf($<string>$, "%s", $1);
+        }
+    }
 
-IdentifierList: IDENTIFIER | IdentifierList COMMA IDENTIFIER
-
-ProgramBody: OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
-Body:  Statement Body  | %empty
-Statement: IF OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE 
-         | IF OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE ELSE OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
-         | WHILE OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
-         | OUTPUT OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS SEMICOLON
-         | INPUT OPEN_PARENTHESIS IDENTIFIER CLOSE_PARENTHESIS SEMICOLON 
-         | IDENTIFIER ASSIGNMENT Expression SEMICOLON 
-         | LOOP OPEN_PARENTHESIS Expression COMMA Expression COMMA Expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE
-
-Expression: OPEN_PARENTHESIS Expression CLOSE_PARENTHESIS
-          | IDENTIFIER
-          | INTEGER
-          | REAL
-          | BOOLEAN
-          | CHAR
-          | TEXT
-          | Expression ADD Expression 
-          | Expression SUB Expression
-          | Expression MULT Expression
-          | Expression DIV Expression
-          | Expression MOD Expression
-          | Expression EQUAL Expression
-          | Expression DIFFERENT Expression
-          | Expression AND Expression
-          | Expression OR Expression
-          | NOT Expression
-          | Expression LESS Expression
-          | Expression GREATER Expression
-          | Expression LESSEQUAL Expression
-          | Expression GREATEREQUAL Expression
 %%
 
 void yysuccess(char *s){
@@ -140,12 +231,17 @@ void yyerror(const char *s) {
 
 int main (void)
 {
+    
     yyin=fopen(file, "r");
     if(yyin==NULL){
         printf("erreur dans l'ouverture du fichier");
         return 1;
     }
+    Table_sym = insertRow(&Table_sym ,1);
+
     yyparse();  
+
+    save_quadruplets(Quad, "quadruplets.txt");
 
     return 0;
 }

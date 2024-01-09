@@ -102,11 +102,15 @@ return COLON;
 {INTEGER_DECLARE} {
 yysuccess("INTEGER_DECLARE");
 
+strcpy( yylval.string ,"Integer");
+
 return INTEGER_DECLARE;
 }
 
 {REAL_DECLARE} {
 yysuccess("REAL_DECLARE");
+
+strcpy( yylval.string , "Real");
 
 return REAL_DECLARE;
 }
@@ -114,17 +118,23 @@ return REAL_DECLARE;
 {BOOLEAN_DECLARE} {
 yysuccess("BOOLEAN_DECLARE");
 
+strcpy( yylval.string , "Boolean");
+
 return BOOLEAN_DECLARE;
 }
 
 {CHAR_DECLARE} {
 yysuccess("CHAR_DECLARE");
 
+strcpy( yylval.string , "Char");
+
 return CHAR_DECLARE;
 }
 
 {STRING_DECLARE} {
 yysuccess("STRING_DECLARE");
+
+strcpy( yylval.string , "Text");
 
 return STRING_DECLARE;
 }
@@ -133,11 +143,15 @@ return STRING_DECLARE;
 {INTEGER} {
 yysuccess("INTEGER");
 
+yylval.int_val = atoi(yytext);
+
 return INTEGER;
 }
 
 {REAL} {
 yysuccess("REAL");
+
+yylval.real_val = atof(yytext);
 
 return REAL;
 }
@@ -145,11 +159,18 @@ return REAL;
 {BOOLEAN} {
 yysuccess("BOOLEAN");
 
+if(strcmp(yytext,"True") == 0)
+    yylval.bool_val = 1;
+else
+    yylval.bool_val = 0;
+
 return BOOLEAN;
 }
 
 {CHAR} {
 yysuccess("CHAR");
+
+yylval.char_val = yytext[1];
 
 return CHAR;
 }
@@ -337,6 +358,8 @@ currentColumnNumber = 1;
 
 {IDENTIFIER} {
 yysuccess("IDENTIFIER");
+
+strcpy( yylval.string,yytext);
 
 return IDENTIFIER;
 }

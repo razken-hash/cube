@@ -2,9 +2,9 @@
 
 rm -f lex.yy.c cube-parser.tab.c cube-parser.tab.h a.out
 
-lex cube-lexer.l
 bison -d cube-parser.y 
+flex cube-lexer.l
 
-gcc lex.yy.c cube-parser.tab.c
+gcc cube-parser.tab.c lex.yy.c  -lfl -lm
 
 ./a.out
