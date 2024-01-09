@@ -110,7 +110,7 @@ declaration: IDENTIFIER COLON type SEMICOLON {
 }
 type: INTEGER_DECLARE | REAL_DECLARE | BOOLEAN_DECLARE | CHAR_DECLARE | STRING_DECLARE
 Body: | statement Body
-statement: assignment
+statement: assignment | input | output
 assignment: IDENTIFIER ASSIGNMENT expression SEMICOLON {
     Column *col = get_id(Table_sym,$1);
     if(col==NULL){
@@ -392,7 +392,18 @@ expression: expression ADD expression {
         }
     }
 
-
+input: INPUT OPEN_PARENTHESIS IDENTIFIER CLOSE_PARENTHESIS SEMICOLON {
+    Column *col = get_id(Table_sym,$3);
+    if(col==NULL){
+        printf("File '%s', line %d: %s Variable not declared \n", file, yylineno,$3);
+        YYERROR;
+    }else{
+        insert_quadruplet(&Quad, "input", "", "", $3);
+    }    
+}
+output: OUTPUT OPEN_PARENTHESIS expression CLOSE_PARENTHESIS SEMICOLON {
+    insert_quadruplet(&Quad, "output", $3.value, "", "");
+}
 %%
 
 void yysuccess(char *s){
