@@ -118,7 +118,7 @@ return REAL_DECLARE;
 {BOOLEAN_DECLARE} {
 yysuccess("BOOLEAN_DECLARE");
 
-strcpy( yylval.string , "Boolean");
+strcpy( yylval.string , "Bool");
 
 return BOOLEAN_DECLARE;
 }
@@ -177,6 +177,8 @@ return CHAR;
 
 {TEXT} {
 yysuccess("TEXT");
+
+strcpy( yylval.string , yytext);
 
 return TEXT;
 }

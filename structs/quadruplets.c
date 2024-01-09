@@ -5,9 +5,9 @@
 typedef struct Quadruplet
 {
     char op[10];
-    char arg1[10];
-    char arg2[10];
-    char result[10];
+    char arg1[256];
+    char arg2[256];
+    char result[256];
     struct Quadruplet *next;
 } Quadruplet;
 
