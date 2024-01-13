@@ -49,6 +49,16 @@ void update_quadruplet_result(Quadruplet *q, char *result)
     strcpy(q->result, result);
 }
 
+void update_quadruplet_arg1(Quadruplet *q, char *arg1)
+{
+    strcpy(q->arg1, arg1);
+}
+
+void update_quadruplet_arg2(Quadruplet *q, char *arg2)
+{
+    strcpy(q->arg2, arg2);
+}
+
 Quadruplet *getLastQuad(Quadruplet *q)
 {
     Quadruplet *aux = q;
@@ -84,7 +94,7 @@ void save_quadruplets(Quadruplet *q, char *filename)
     FILE *f = fopen(filename, "w");
     while (q != NULL)
     {
-        fprintf(f, "%d %s %s %s %s\n", q->num, q->op, q->arg1, q->arg2, q->result);
+        fprintf(f, "(%d , %s , %s , %s , %s)\n", q->num, q->op, q->arg1, q->arg2, q->result);
         q = q->next;
     }
     fclose(f);

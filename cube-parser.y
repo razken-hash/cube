@@ -409,7 +409,7 @@ output: OUTPUT OPEN_PARENTHESIS expression CLOSE_PARENTHESIS SEMICOLON {
 condition:  BeginCondition OPEN_CURLY_BRACE Body CLOSE_CURLY_BRACE ElseCondition
 BeginCondition: IF OPEN_PARENTHESIS expression CLOSE_PARENTHESIS {
     if(strcmp($3.type,"Bool")==0){
-        Quadruplet *newQuad = insert_quadruplet(&Quad, "BZ", $3.value, "", "");
+        Quadruplet *newQuad = insert_quadruplet(&Quad, "BZ", "", $3.value, "");
         push(&stack, newQuad);
     }else{
         printf("File '%s', line %d: Type mismatch \n", file, yylineno);
@@ -421,13 +421,13 @@ ElseCondition: {
     Quadruplet *lastQuad = getLastQuad(Quad);
     char *num = (char*)malloc(sizeof(char)*10);
     sprintf(num, "%d", lastQuad->num + 1);
-    update_quadruplet_result(poppedQuad, num);
+    update_quadruplet_arg1(poppedQuad, num);
 } | BeginElse Body  CLOSE_CURLY_BRACE {
     Quadruplet *poppedQuad = pop(&stack);
     Quadruplet *lastQuad = getLastQuad(Quad);
     char *num = (char*)malloc(sizeof(char)*10);
     sprintf(num, "%d", lastQuad->num + 1);
-    update_quadruplet_result(poppedQuad, num);
+    update_quadruplet_arg1(poppedQuad, num);
 }
 
 BeginElse: ELSE OPEN_CURLY_BRACE {
@@ -435,7 +435,7 @@ BeginElse: ELSE OPEN_CURLY_BRACE {
     Quadruplet *newQuad = insert_quadruplet(&Quad, "BR", "", "", "");
     char *num = (char*)malloc(sizeof(char)*10);
     sprintf(num, "%d", newQuad->num + 1);
-    update_quadruplet_result(poppedQuad, num);
+    update_quadruplet_arg1(poppedQuad, num);
     push(&stack, newQuad);
 }
 
@@ -445,15 +445,15 @@ While: BeginWhile Body  CLOSE_CURLY_BRACE {
 
     char*num = (char*)malloc(sizeof(char)*10);
     sprintf(num, "%d", conditionQuad->num + 1);
-    Quadruplet *newQuad = insert_quadruplet(&Quad, "BR", "", "",num );
+    Quadruplet *newQuad = insert_quadruplet(&Quad, "BR", num, "","" );
 
     char*num2 = (char*)malloc(sizeof(char)*10);
     sprintf(num2, "%d", newQuad->num + 1);
-    update_quadruplet_result(beginWhileQuad, num2);
+    update_quadruplet_arg1(beginWhileQuad, num2);
 }
 BeginWhile: WhileCondition expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE {
     if(strcmp($2.type,"Bool")==0){
-        Quadruplet *newQuad = insert_quadruplet(&Quad, "BZ", $2.value, "", "");
+        Quadruplet *newQuad = insert_quadruplet(&Quad, "BZ","" , $2.value,"" );
         push(&stack, newQuad);
     }else{
         printf("File '%s', line %d: Type mismatch \n", file, yylineno);
