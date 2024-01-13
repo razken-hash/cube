@@ -111,7 +111,7 @@ declaration: IDENTIFIER COLON type SEMICOLON {
 }
 type: INTEGER_DECLARE | REAL_DECLARE | BOOLEAN_DECLARE | CHAR_DECLARE | STRING_DECLARE
 Body: | statement Body
-statement: assignment | input | output | condition
+statement: assignment | input | output | condition | While
 assignment: IDENTIFIER ASSIGNMENT expression SEMICOLON {
     Column *col = get_id(Table_sym,$1);
     if(col==NULL){
@@ -438,6 +438,31 @@ BeginElse: ELSE OPEN_CURLY_BRACE {
     update_quadruplet_result(poppedQuad, num);
     push(&stack, newQuad);
 }
+
+While: BeginWhile Body  CLOSE_CURLY_BRACE {
+    Quadruplet *beginWhileQuad = pop(&stack);
+    Quadruplet *conditionQuad = pop(&stack);
+
+    char*num = (char*)malloc(sizeof(char)*10);
+    sprintf(num, "%d", conditionQuad->num + 1);
+    Quadruplet *newQuad = insert_quadruplet(&Quad, "BR", "", "",num );
+
+    char*num2 = (char*)malloc(sizeof(char)*10);
+    sprintf(num2, "%d", newQuad->num + 1);
+    update_quadruplet_result(beginWhileQuad, num2);
+}
+BeginWhile: WhileCondition expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE {
+    if(strcmp($2.type,"Bool")==0){
+        Quadruplet *newQuad = insert_quadruplet(&Quad, "BZ", $2.value, "", "");
+        push(&stack, newQuad);
+    }else{
+        printf("File '%s', line %d: Type mismatch \n", file, yylineno);
+        YYERROR;
+    }
+}
+WhileCondition: WHILE OPEN_PARENTHESIS {
+    push(&stack, getLastQuad(Quad));
+}
 %%
 
 void yysuccess(char *s){
@@ -458,6 +483,8 @@ int main (int argc,char **argv)
     }
 
     Table_sym = insertRow(&Table_sym );
+
+    insert_quadruplet(&Quad, "START", "", "", "");
 
     yyparse();  
 

@@ -4,26 +4,16 @@ i : Integer;
 r : Real;
 b : Bool;
 {
-    i = 10;
-    r = 1.2;
-    r = r + i;
-
-    r = 1.3 + i;
-
-    r = i // (i+1);
-
-    b = not b;
-
-    if(b) {
-        if(b){
-            Output("Hello world");    
+    while(b) {
+        Output("Tahya lalgerie");
+        while(b or b) {
+            Output("iii while dakhal while");
+            if(b) {
+                i = i;
+            }
         }
-        Output("123 viva lalgerie");
+        
     }
-    if(b) {
-        Output("Rani f live");
-    }else{
-
-    }
+    Output("Khrajna men while");
 
 }
