@@ -1,24 +1,25 @@
-program islem;
-Variables:
-i : Integer;
-r : Real;
-b : Bool;
+program cube; 
+Variables: 
+ i : Integer;
+ r : Real;
+ b : Bool;
+ t : Text;
+ c : Char; 
 {
-    
-    i = (3+4)*5+3*2;
-    Output("-----------------------");
-
-    while(b) {
-        #this is a comment
-        Output("Tahya lalgerie");
-        while(b or b) {
-            Output("iii while dakhal while");
-            if(b) {
-                i = i;
+    i = 7;
+    r = 5.13; 
+    while(i > r) { 
+        Output("Test while loop 1");
+        while(b) { 
+            Output("Inside while loop 2"); 
+            if(b) { 
+                i = 5; 
+                Output("Inside If");
+            }else {
+                Output("Inside Else");
+                r = 3.14; 
             }
-        }
-        
-    }
-    Output("Khrajna men while");
-
-}
+        } 
+    }  
+    Output("End of program"); 
+} 

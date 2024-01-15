@@ -493,6 +493,8 @@ int main (int argc,char **argv)
 
     yyparse();  
 
+    insert_quadruplet(&Quad, "END", "", "", "");
+
     save_quadruplets(Quad, "quadruplets.txt");
 
     saveSymboleTable(Table_sym, "symboles_table.txt");
