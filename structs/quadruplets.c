@@ -94,7 +94,7 @@ void save_quadruplets(Quadruplet *q, char *filename)
     FILE *f = fopen(filename, "w");
     while (q != NULL)
     {
-        fprintf(f, "(%d , %s , %s , %s , %s)\n", q->num, q->op, q->arg1, q->arg2, q->result);
+        fprintf(f, "%d - (%s , %s , %s , %s)\n", q->num, q->op, q->arg1, q->arg2, q->result);
         q = q->next;
     }
     fclose(f);

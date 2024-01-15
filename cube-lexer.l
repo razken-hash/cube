@@ -4,7 +4,6 @@
 
 extern void yysuccess(char *s);
 extern void yyerror(const char *s);
-extern void showLexicalError();
 extern int currentColumnNumber;
 
 %}

@@ -94,7 +94,6 @@ int currentRegisterIndex = 1;
 
 void yysuccess(char *s);
 void yyerror(const char *s);
-void showLexicalError();
 %}
 
 %%
@@ -128,7 +127,7 @@ assignment: IDENTIFIER ASSIGNMENT expression SEMICOLON {
 }
 expression: expression ADD expression {
         if(strcmp($1.type,"Integer")==0 && strcmp($3.type,"Integer")==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "+", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Integer");
             sprintf($$.value, "%s", currentRegister); 
@@ -137,13 +136,13 @@ expression: expression ADD expression {
             || (strcmp($1.type,"Integer")==0 && strcmp($3.type,"Real")==0) 
             || (strcmp($1.type,"Real")==0 && strcmp($3.type,"Integer")==0)
         ){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "+", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Real");
             sprintf($$.value, "%s", currentRegister);
         }
         else if (strcmp($1.type,"Text")==0 && strcmp($3.type,"Text")==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "+", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Text");
             sprintf($$.value, "%s", currentRegister);
@@ -156,7 +155,7 @@ expression: expression ADD expression {
     | expression SUB expression 
     {
         if(strcmp($1.type,"Integer")==0 && strcmp($3.type,"Integer")==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "-", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Integer");
             sprintf($$.value, "%s", currentRegister); 
@@ -165,7 +164,7 @@ expression: expression ADD expression {
             || (strcmp($1.type,"Integer")==0 && strcmp($3.type,"Real")==0) 
             || (strcmp($1.type,"Real")==0 && strcmp($3.type,"Integer")==0)
         ){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "-", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Real");
             sprintf($$.value, "%s", currentRegister);
@@ -177,7 +176,7 @@ expression: expression ADD expression {
     | expression MULT expression 
     {
         if(strcmp($1.type,"Integer")==0 && strcmp($3.type,"Integer")==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "*", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Integer");
             sprintf($$.value, "%s", currentRegister); 
@@ -186,7 +185,7 @@ expression: expression ADD expression {
             || (strcmp($1.type,"Integer")==0 && strcmp($3.type,"Real")==0) 
             || (strcmp($1.type,"Real")==0 && strcmp($3.type,"Integer")==0)
         ){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "*", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Real");
             sprintf($$.value, "%s", currentRegister);
@@ -204,7 +203,7 @@ expression: expression ADD expression {
                 printf("File '%s', line %d: Division by 0 \n", file, yylineno);
                 YYERROR;
             }else{
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "/", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Real");
             sprintf($$.value, "%s", currentRegister);
@@ -216,7 +215,7 @@ expression: expression ADD expression {
     }
     | expression MOD expression  {
         if(strcmp($1.type,"Integer")==0 && strcmp($3.type,"Integer")==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "%", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Integer");
             sprintf($$.value, "%s", currentRegister);  
@@ -227,7 +226,7 @@ expression: expression ADD expression {
     }
     | expression EQUAL expression  {
         if(strcmp($1.type,$3.type)==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "==", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Bool");
             sprintf($$.value, "%s", currentRegister);  
@@ -239,7 +238,7 @@ expression: expression ADD expression {
     | expression DIFFERENT expression 
     {
         if(strcmp($1.type,$3.type)==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "!=", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Bool");
             sprintf($$.value, "%s", currentRegister);  
@@ -257,7 +256,7 @@ expression: expression ADD expression {
                 printf("File '%s', line %d: Division by 0 \n", file, yylineno);
                 YYERROR;
             }else{
-                sprintf(currentRegister, "R%d", currentRegisterIndex++);
+                sprintf(currentRegister, "T%d", currentRegisterIndex++);
                 insert_quadruplet(&Quad, "<", $1.value, $3.value, currentRegister);
                 strcpy($$.type,"Bool");
                 sprintf($$.value, "%s", currentRegister);
@@ -276,7 +275,7 @@ expression: expression ADD expression {
                 printf("File '%s', line %d: Division by 0 \n", file, yylineno);
                 YYERROR;
             }else{
-                sprintf(currentRegister, "R%d", currentRegisterIndex++);
+                sprintf(currentRegister, "T%d", currentRegisterIndex++);
                 insert_quadruplet(&Quad, ">", $1.value, $3.value, currentRegister);
                 strcpy($$.type,"Bool");
                 sprintf($$.value, "%s", currentRegister);
@@ -295,7 +294,7 @@ expression: expression ADD expression {
                 printf("File '%s', line %d: Division by 0 \n", file, yylineno);
                 YYERROR;
             }else{
-                sprintf(currentRegister, "R%d", currentRegisterIndex++);
+                sprintf(currentRegister, "T%d", currentRegisterIndex++);
                 insert_quadruplet(&Quad, "<=", $1.value, $3.value, currentRegister);
                 strcpy($$.type,"Bool");
                 sprintf($$.value, "%s", currentRegister);
@@ -314,7 +313,7 @@ expression: expression ADD expression {
                 printf("File '%s', line %d: Division by 0 \n", file, yylineno);
                 YYERROR;
             }else{
-                sprintf(currentRegister, "R%d", currentRegisterIndex++);
+                sprintf(currentRegister, "T%d", currentRegisterIndex++);
                 insert_quadruplet(&Quad, ">=", $1.value, $3.value, currentRegister);
                 strcpy($$.type,"Bool");
                 sprintf($$.value, "%s", currentRegister);
@@ -326,7 +325,7 @@ expression: expression ADD expression {
     }
     | expression AND expression {
         if(strcmp($1.type,"Bool")==0 && strcmp($3.type,"Bool")==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "&&", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Bool");
             sprintf($$.value, "%s", currentRegister);
@@ -337,7 +336,7 @@ expression: expression ADD expression {
     }
     | expression OR expression {
         if(strcmp($1.type,"Bool")==0 && strcmp($3.type,"Bool")==0){
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "||", $1.value, $3.value, currentRegister);
             strcpy($$.type,"Bool");
             sprintf($$.value, "%s", currentRegister);
@@ -349,7 +348,7 @@ expression: expression ADD expression {
     | NOT expression {
         if(strcmp($2.type,"Bool")==0){
             
-            sprintf(currentRegister, "R%d", currentRegisterIndex++);
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
             insert_quadruplet(&Quad, "!", $2.value, "", currentRegister);
             strcpy($$.type,"Bool");
             sprintf($$.value, "%s", currentRegister);
@@ -440,20 +439,25 @@ BeginElse: ELSE OPEN_CURLY_BRACE {
 }
 
 While: BeginWhile Body  CLOSE_CURLY_BRACE {
-    Quadruplet *beginWhileQuad = pop(&stack);
-    Quadruplet *conditionQuad = pop(&stack);
+    // ICI on est apres le bloc d'instructions du while
+    Quadruplet *beginWhileQuad = pop(&stack); // c'est l'adr de debut while car c'est la derniere 
+    Quadruplet *conditionQuad = pop(&stack); // l'adr de condition
 
     char*num = (char*)malloc(sizeof(char)*10);
     sprintf(num, "%d", conditionQuad->num + 1);
-    Quadruplet *newQuad = insert_quadruplet(&Quad, "BR", num, "","" );
+    // on insert un quadreplet pour pour se brancher vers la condition du while
+    Quadruplet *newQuad = insert_quadruplet(&Quad, "BR", num, "","" ); 
 
     char*num2 = (char*)malloc(sizeof(char)*10);
     sprintf(num2, "%d", newQuad->num + 1);
-    update_quadruplet_arg1(beginWhileQuad, num2);
+    // mis à jour de l'adr du branchement vers la fin (le prochain bloc d'instructions) crée dans debut while
+    update_quadruplet_arg1(beginWhileQuad, num2); 
 }
 BeginWhile: WhileCondition expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE {
+    // ICI on est apres la condition du while
     if(strcmp($2.type,"Bool")==0){
-        Quadruplet *newQuad = insert_quadruplet(&Quad, "BZ","" , $2.value,"" );
+        Quadruplet *newQuad = insert_quadruplet(&Quad, "BZ","END_WHILE" , $2.value,"" ); 
+        // on sauvegarde l'adr de la condition pour pouvoir se brancher vers elle apres le bloc d'instructions
         push(&stack, newQuad);
     }else{
         printf("File '%s', line %d: Type mismatch \n", file, yylineno);
@@ -461,7 +465,8 @@ BeginWhile: WhileCondition expression CLOSE_PARENTHESIS OPEN_CURLY_BRACE {
     }
 }
 WhileCondition: WHILE OPEN_PARENTHESIS {
-    push(&stack, getLastQuad(Quad));
+    // ICI on est avant la condition du while
+    push(&stack, getLastQuad(Quad)); // sauvagarde le quad du debut de la condition
 }
 %%
 
@@ -499,22 +504,3 @@ int main (int argc,char **argv)
     return 0;
 }
 
-void showLexicalError() {
-
-    char line[256], introError[80]; 
-
-    fseek(yyin, 0, SEEK_SET);
-    
-    int i = 0; 
-
-    while (fgets(line, sizeof(line), yyin)) { 
-        i++; 
-        if(i == yylineno) break;  
-    } 
-        
-    sprintf(introError, "Lexical error in Line %d : Unrecognized character : ", yylineno);
-    printf("%s%s", introError, line);  
-    int j=1;
-    while(j<currentColumnNumber+strlen(introError)) { printf(" "); j++; }
-    printf("^\n");
-}

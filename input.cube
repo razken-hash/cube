@@ -4,7 +4,12 @@ i : Integer;
 r : Real;
 b : Bool;
 {
+    
+    i = (3+4)*5+3*2;
+    Output("-----------------------");
+
     while(b) {
+        #this is a comment
         Output("Tahya lalgerie");
         while(b or b) {
             Output("iii while dakhal while");
