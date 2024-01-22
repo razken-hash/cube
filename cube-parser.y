@@ -252,15 +252,10 @@ expression: expression ADD expression {
         || strcmp($1.type,"Real")==0 && strcmp($3.type,"Real")==0 
         || strcmp($1.type,"Integer")==0 && strcmp($3.type,"Real")==0 
         || strcmp($1.type,"Real")==0 && strcmp($3.type,"Integer")==0){
-            if(strcmp($3.value,"0")==0){
-                printf("File '%s', line %d: Division by 0 \n", file, yylineno);
-                YYERROR;
-            }else{
-                sprintf(currentRegister, "T%d", currentRegisterIndex++);
-                insert_quadruplet(&Quad, "<", $1.value, $3.value, currentRegister);
-                strcpy($$.type,"Bool");
-                sprintf($$.value, "%s", currentRegister);
-            }
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
+            insert_quadruplet(&Quad, "<", $1.value, $3.value, currentRegister);
+            strcpy($$.type,"Bool");
+            sprintf($$.value, "%s", currentRegister);
         }else{
             printf("File '%s', line %d: Type mismatch \n", file, yylineno);
             YYERROR;
@@ -271,15 +266,10 @@ expression: expression ADD expression {
         || strcmp($1.type,"Real")==0 && strcmp($3.type,"Real")==0 
         || strcmp($1.type,"Integer")==0 && strcmp($3.type,"Real")==0 
         || strcmp($1.type,"Real")==0 && strcmp($3.type,"Integer")==0){
-            if(strcmp($3.value,"0")==0){
-                printf("File '%s', line %d: Division by 0 \n", file, yylineno);
-                YYERROR;
-            }else{
-                sprintf(currentRegister, "T%d", currentRegisterIndex++);
-                insert_quadruplet(&Quad, ">", $1.value, $3.value, currentRegister);
-                strcpy($$.type,"Bool");
-                sprintf($$.value, "%s", currentRegister);
-            }
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
+            insert_quadruplet(&Quad, ">", $1.value, $3.value, currentRegister);
+            strcpy($$.type,"Bool");
+            sprintf($$.value, "%s", currentRegister);
         }else{
             printf("File '%s', line %d: Type mismatch \n", file, yylineno);
             YYERROR;
@@ -290,15 +280,10 @@ expression: expression ADD expression {
         || strcmp($1.type,"Real")==0 && strcmp($3.type,"Real")==0 
         || strcmp($1.type,"Integer")==0 && strcmp($3.type,"Real")==0 
         || strcmp($1.type,"Real")==0 && strcmp($3.type,"Integer")==0){
-            if(strcmp($3.value,"0")==0){
-                printf("File '%s', line %d: Division by 0 \n", file, yylineno);
-                YYERROR;
-            }else{
-                sprintf(currentRegister, "T%d", currentRegisterIndex++);
-                insert_quadruplet(&Quad, "<=", $1.value, $3.value, currentRegister);
-                strcpy($$.type,"Bool");
-                sprintf($$.value, "%s", currentRegister);
-            }
+            sprintf(currentRegister, "T%d", currentRegisterIndex++);
+            insert_quadruplet(&Quad, "<=", $1.value, $3.value, currentRegister);
+            strcpy($$.type,"Bool");
+            sprintf($$.value, "%s", currentRegister);
         }else{
             printf("File '%s', line %d: Type mismatch \n", file, yylineno);
             YYERROR;
@@ -309,15 +294,10 @@ expression: expression ADD expression {
         || strcmp($1.type,"Real")==0 && strcmp($3.type,"Real")==0 
         || strcmp($1.type,"Integer")==0 && strcmp($3.type,"Real")==0 
         || strcmp($1.type,"Real")==0 && strcmp($3.type,"Integer")==0){
-            if(strcmp($3.value,"0")==0){
-                printf("File '%s', line %d: Division by 0 \n", file, yylineno);
-                YYERROR;
-            }else{
                 sprintf(currentRegister, "T%d", currentRegisterIndex++);
                 insert_quadruplet(&Quad, ">=", $1.value, $3.value, currentRegister);
                 strcpy($$.type,"Bool");
                 sprintf($$.value, "%s", currentRegister);
-            }
         }else{
             printf("File '%s', line %d: Type mismatch \n", file, yylineno);
             YYERROR;
